@@ -51,12 +51,9 @@ public class DiaryRepository {
         }
         storage.put(id, body);
 
-
-
     }
 
     void delete(final Long id) {
-        //id 검증
         storage.remove(id);
     }
 

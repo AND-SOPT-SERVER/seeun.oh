@@ -15,6 +15,7 @@ public class DiaryService {
     }
 
     void patchDiary(final Long id, final String body) {
+        //입력받은 id가 index에 존재하는지 확인
         if(diaryRepository.existsById(id)) {
             diaryRepository.update(id, body);
         } else {
@@ -24,6 +25,7 @@ public class DiaryService {
     }
 
     void deleteDiary(final Long id) {
+        //입력받은 id가 index에 존재하는지 확인
         if(diaryRepository.existsById(id)) {
             diaryRepository.delete(id);
         } else {

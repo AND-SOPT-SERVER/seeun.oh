@@ -30,15 +30,23 @@ public class DiaryController {
 
     }
     final void delete(final String id) {
-        diaryService.deleteDiary(Long.parseLong(id));
+        try {
+            diaryService.deleteDiary(Long.parseLong(id));
+        } catch (NumberFormatException e) { //입력 id 타입 검증
+            throw new InvalidInputException();
+        }
+
     }
+
     final void patch(final String id, final String body) {
-        //입력받은 id(index에 있다면)의 body 수정하기
+        try {
+            //입력 글자 수 제한 검증
+            validateInput(body);
+            diaryService.patchDiary(Long.parseLong(id), body);
+        } catch (NumberFormatException e) { //입력 id 타입 검증
+            throw new InvalidInputException();
+        }
 
-
-        //입력 글자 수 제한 검증
-        validateInput(body);
-        diaryService.patchDiary(Long.parseLong(id), body);
     }
 
     final void validateInput(String body) {
@@ -48,15 +56,12 @@ public class DiaryController {
             throw new BodyLengthException();
         }
         //입력 x
-        if(body.trim().equals("")) {
+        if(body.trim().isEmpty()) {
             throw new InvalidInputException();
         }
     }
 
-    final void validateId(final String id) {
-        //id가 존재 유무 검즘
 
-    }
 
 
     enum Status {
