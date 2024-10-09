@@ -16,7 +16,7 @@ public class DiaryRepository {
     void save(final Diary diary) {
         //채번 과정
         final long id = numbering.addAndGet(1);
-;
+
         //저장 과정
         storage.put(id, diary.getBody());
     }
@@ -30,8 +30,11 @@ public class DiaryRepository {
         for(long index=1; index <= numbering.longValue(); index++) {
             final String body = storage.get(index);
 
-            //(2-1) 불러온 값을 구성한 자료구조로 이관
-            diaryList.add(new Diary(index, body));
+            if(body != null) {
+                //(2-1) 불러온 값을 구성한 자료구조로 이관
+                diaryList.add(new Diary(index, body));
+            }
+
         }
 
         //(3) 불러온 자료구조 응답
@@ -39,6 +42,15 @@ public class DiaryRepository {
     }
 
 
+    void update(final Long id, final String body) {
+        storage.put(id, body);
+
+    }
+
+    void delete(final Long id) {
+        //id 검증
+        storage.remove(id);
+    }
 
 
 
