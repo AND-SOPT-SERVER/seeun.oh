@@ -29,7 +29,8 @@ public class DiaryRepository {
         // (2) 저장한 값을 불러오는 반복 구조
         for(long index=1; index <= numbering.longValue(); index++) {
             final String body = storage.get(index);
-
+            
+            //delete될 경우, null이 저장되므로 제외해야 함
             if(body != null) {
                 //(2-1) 불러온 값을 구성한 자료구조로 이관
                 diaryList.add(new Diary(index, body));
@@ -43,7 +44,14 @@ public class DiaryRepository {
 
 
     void update(final Long id, final String body) {
+        //body가 null이면 삭제된 일기 -> update x
+        final String getBody = storage.get(id);
+        if(getBody == null) {
+            return;
+        }
         storage.put(id, body);
+
+
 
     }
 
