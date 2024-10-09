@@ -1,6 +1,7 @@
 package org.sopt.seminar1;
 
 import org.sopt.seminar1.Main.UI.BodyLengthException;
+import org.sopt.seminar1.Main.UI.InvalidInputException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,8 +23,8 @@ public class DiaryController {
         return diaryService.getDiaryList();
     }
     final void post(final String body) {
-        //글자수 제한 검증
-        validateLength(body);
+        //입력 글자수 제한 검증
+        validateInput(body);
         //입력받은 body 저장하기
         diaryService.writeDairy(body);
 
@@ -33,17 +34,30 @@ public class DiaryController {
     }
     final void patch(final String id, final String body) {
         //입력받은 id(index에 있다면)의 body 수정하기
-        //글자 수 제한 검증
-        validateLength(body);
+
+
+        //입력 글자 수 제한 검증
+        validateInput(body);
         diaryService.patchDiary(Long.parseLong(id), body);
     }
 
-    final void validateLength(String body) {
+    final void validateInput(String body) {
+        //30자 초과
         if(body.length()>=31) {
             System.out.println(body.length()+"자");
             throw new BodyLengthException();
         }
+        //입력 x
+        if(body.trim().equals("")) {
+            throw new InvalidInputException();
+        }
     }
+
+    final void validateId(final String id) {
+        //id가 존재 유무 검즘
+
+    }
+
 
     enum Status {
         READY,

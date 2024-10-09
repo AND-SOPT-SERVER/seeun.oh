@@ -1,5 +1,5 @@
 package org.sopt.seminar1;
-
+import org.sopt.seminar1.Main.UI.IdNotExistException;
 
 import java.util.List;
 
@@ -15,12 +15,21 @@ public class DiaryService {
     }
 
     void patchDiary(final Long id, final String body) {
-        diaryRepository.update(id, body);
+        if(diaryRepository.existsById(id)) {
+            diaryRepository.update(id, body);
+        } else {
+            throw new IdNotExistException();
+        }
+
     }
 
     void deleteDiary(final Long id) {
+        if(diaryRepository.existsById(id)) {
+            diaryRepository.delete(id);
+        } else {
+            throw new IdNotExistException();
+        }
 
-        diaryRepository.delete(id);
     }
 
 

@@ -60,6 +60,10 @@ public class DiaryRepository {
         storage.remove(id);
     }
 
+    boolean existsById(final Long id) {
+        return storage.containsKey(id);
+    }
+
 
 
 }
