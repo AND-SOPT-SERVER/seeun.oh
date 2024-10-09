@@ -43,7 +43,7 @@ public class DiaryRepository {
     }
 
 
-    void update(final Long id, final String body) {
+    void patch(final Long id, final String body) {
         //body가 null이면 삭제된 일기 -> update x
         final String getBody = storage.get(id);
         if(getBody == null) {
