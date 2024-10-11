@@ -34,6 +34,18 @@ public class DiaryService {
 
     }
 
+    void restoreDiary(final Long id) {
+        if(diaryRepository.existsByDeletedId(id)) {
+            diaryRepository.restore(id);
+        } else {
+            throw new IdNotExistException();
+        }
+    }
+
+    List<Diary> getDeletedDiaryList() {
+        return diaryRepository.findDeletedAll();
+    }
+
 
 
 }

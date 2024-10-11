@@ -10,6 +10,7 @@ import static java.lang.Integer.parseInt;
 
 public class DiaryRepository {
     private final Map<Long, String> storage = new ConcurrentHashMap<>();
+    private final Map<Long, String> deletedStorage = new ConcurrentHashMap<>();
     private final AtomicLong numbering = new AtomicLong();
 
 
@@ -54,13 +55,35 @@ public class DiaryRepository {
     }
 
     void delete(final Long id) {
-        storage.remove(id);
+        String deletedBody = storage.remove(id);
+        deletedStorage.put(id, deletedBody);
+    }
+
+    void restore(final Long id) {
+        String restoreBody = deletedStorage.get(id);
+        storage.put(id, restoreBody);
+        System.out.println(id+"번 일기 복구 완료");
+    }
+
+    List<Diary> findDeletedAll() {
+        // (1) 삭제된 일기 목록 담을 구조
+        final List<Diary> deletedDiaryList = new ArrayList<>();
+
+        // (2) deletedStorage에 id 있으면 deletedDiaryList에 add
+        for(Long id : deletedStorage.keySet()) {
+            deletedDiaryList.add(new Diary(id, deletedStorage.get(id)));
+        }
+        //(3) 불러온 자료구조 응답
+        return deletedDiaryList;
     }
 
     boolean existsById(final Long id) {
         return storage.containsKey(id);
     }
 
+    boolean existsByDeletedId(final Long id) {
+        return deletedStorage.containsKey(id);
+    }
 
 
 }
