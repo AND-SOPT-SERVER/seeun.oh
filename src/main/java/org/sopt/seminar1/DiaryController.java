@@ -61,7 +61,18 @@ public class DiaryController {
         }
     }
 
+    final void restore(String id) {
+        try {
+            diaryService.restoreDiary(Long.parseLong(id));
+        } catch (NumberFormatException e) {
+            throw new InvalidInputException();
+        }
 
+    }
+
+    final List<Diary> getDeletedList() {
+        return diaryService.getDeletedDiaryList();
+    }
 
 
     enum Status {
