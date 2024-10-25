@@ -24,6 +24,11 @@ public class DiaryService {
     }
 
     public void createDiary(String title, String content) {
+        //제목 중복 검사
+        if (diaryRepository.existsByTitle(title)) {
+            throw new IllegalArgumentException("이미 존재하는 제목입니다. 다른 제목을 입력하세요.");
+        }
+
         diaryRepository.save(new DiaryEntity(title, content));
     }
 
@@ -60,14 +65,14 @@ public class DiaryService {
             return new Diary(diaryDetail.getId(), diaryDetail.getTitle(), diaryDetail.getContent(), diaryDetail.getCreatedAt());
         } else {
             // id에 해당하는 DiaryEntity가 없는 경우 예외 처리
-            throw new NoSuchElementException("존재하지 않는 ID입니다. 입력 ID : " + id);
+            throw new NoSuchElementException("존재하지 않는 일기 id입니다.");
         }
     }
 
     public void updateDiary(long id, String title, String content) {
         // id에 해당하는 DiaryEntity가 존재하는지 확인
-        DiaryEntity diaryEntity = diaryRepository.findById(id).orElse(null);
-        diaryEntity.setTitle(title);
+        DiaryEntity diaryEntity = diaryRepository.findById(id)
+                .orElseThrow(()-> new NoSuchElementException("존재하지 않는 일기 id입니다."));
         diaryEntity.setContent(content);
         diaryRepository.save(diaryEntity);
     }
@@ -81,7 +86,7 @@ public class DiaryService {
             diaryRepository.deleteById(id);
         } else {
             // 존재하지 않을 경우 예외 처리
-            throw new NoSuchElementException("해당 ID의 다이어리가 존재하지 않습니다. ID: " + id);
+            throw new NoSuchElementException("존재하지 않는 일기 id입니다.");
         }
     }
 }

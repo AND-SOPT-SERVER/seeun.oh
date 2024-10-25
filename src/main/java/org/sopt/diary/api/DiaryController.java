@@ -2,11 +2,14 @@ package org.sopt.diary.api;
 
 import org.sopt.diary.service.Diary;
 import org.sopt.diary.service.DiaryService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class DiaryController {
@@ -18,16 +21,20 @@ public class DiaryController {
 
     //일기 작성
     @PostMapping("/api/diary")
-    void post(@RequestBody DiaryRequest diaryRequest) {
-        // title 글자 수 확인
-        if (diaryRequest.getTitle().length() > 30) {
-            throw new IllegalArgumentException("제목은 30자 이내여야 합니다.");
+    ResponseEntity<Map<String, String>> post(@RequestBody DiaryRequest diaryRequest) {
+        try {
+            // content 글자 수 확인
+            if (diaryRequest.getContent().length() > 30) {
+                throw new IllegalArgumentException("내용은 30자 이내여야 합니다.");
+            }
+            diaryService.createDiary(diaryRequest.getTitle(), diaryRequest.getContent());
+
+            // Map.of()를 통해 HashMap 명시적 생성없이 Map 즉시 반환
+            return ResponseEntity.status(200).body(Map.of("message", "일기 작성을 성공했습니다."));
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "사용자 정보를 읽어올 수 없습니다."));
         }
-        // content 글자 수 확인
-        if (diaryRequest.getContent().length() > 30) {
-            throw new IllegalArgumentException("내용은 30자 이내여야 합니다.");
-        }
-        diaryService.createDiary(diaryRequest.getTitle(), diaryRequest.getContent());
 
     }
 
@@ -60,22 +67,33 @@ public class DiaryController {
 
     //일기 수정
     @PatchMapping("/api/diary/{diaryId}")
-    void patch(@PathVariable long diaryId, @RequestBody DiaryRequest diaryRequest) {
-        // title 글자 수 확인
-        if (diaryRequest.getTitle().length() > 30) {
-            throw new IllegalArgumentException("제목은 30자 이내여야 합니다.");
+    ResponseEntity<Map<String, String>> patch(@PathVariable long diaryId, @RequestBody DiaryRequest diaryRequest) {
+        try {
+            // content 글자 수 확인
+            if (diaryRequest.getContent().length() > 30) {
+                throw new IllegalArgumentException("내용은 30자 이내여야 합니다.");
+            }
+            diaryService.updateDiary(diaryId, diaryRequest.getTitle(), diaryRequest.getContent());
+
+            return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "일기 수정에 성공했습니다."));
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "사용자 정보를 읽어올 수 없습니다."));
         }
-        // content 글자 수 확인
-        if (diaryRequest.getContent().length() > 30) {
-            throw new IllegalArgumentException("내용은 30자 이내여야 합니다.");
-        }
-        diaryService.updateDiary(diaryId, diaryRequest.getTitle(), diaryRequest.getContent());
+
     }
 
     //일기 삭제
     @DeleteMapping("/api/diary/{diaryId}")
-    void delete(@PathVariable long diaryId) {
-        diaryService.deleteDiary(diaryId);
+    ResponseEntity<Map<String, String>> delete(@PathVariable long diaryId) {
+        try {
+            diaryService.deleteDiary(diaryId);
+            return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "일기 삭제에 성공했습니다."));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "사용자 정보를 읽어올 수 없습니다."));
+        }
+
+
     }
 
 

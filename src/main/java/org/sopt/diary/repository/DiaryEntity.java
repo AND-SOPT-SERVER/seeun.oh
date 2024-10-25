@@ -11,7 +11,7 @@ public class DiaryEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
-    @Column
+    @Column(unique = true, nullable = false)
     public String title;
 
     @Column
@@ -25,9 +25,8 @@ public class DiaryEntity {
     public DiaryEntity(String title, String content) {
         this.title = title;
         this.content = content;
+        this.createdAt = LocalDateTime.now();
     }
-
-
 
     public long getId() {
         return id;
@@ -35,10 +34,6 @@ public class DiaryEntity {
 
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getContent() {
@@ -51,11 +46,6 @@ public class DiaryEntity {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
-    }
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now(); // 저장 시 자동으로 현재 시간 설정
     }
 
 }
