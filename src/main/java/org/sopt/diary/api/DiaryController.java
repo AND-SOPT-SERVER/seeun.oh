@@ -6,10 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 public class DiaryController {
@@ -32,8 +29,11 @@ public class DiaryController {
             // Map.of()를 통해 HashMap 명시적 생성없이 Map 즉시 반환
             return ResponseEntity.status(200).body(Map.of("message", "일기 작성을 성공했습니다."));
 
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "사용자 정보를 읽어올 수 없습니다."));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(Map.of("message", e.getMessage()));
+        }
+        catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
         }
 
     }
@@ -77,8 +77,8 @@ public class DiaryController {
 
             return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "일기 수정에 성공했습니다."));
 
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "사용자 정보를 읽어올 수 없습니다."));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
         }
 
     }
@@ -89,8 +89,8 @@ public class DiaryController {
         try {
             diaryService.deleteDiary(diaryId);
             return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "일기 삭제에 성공했습니다."));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "사용자 정보를 읽어올 수 없습니다."));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
         }
 
 

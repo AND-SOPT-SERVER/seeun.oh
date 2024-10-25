@@ -9,6 +9,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -18,12 +20,28 @@ import java.util.Optional;
 public class DiaryService {
 
     private final DiaryRepository diaryRepository;
+    private static final Duration DIARY_WRITE_COOLDOWN = Duration.ofMinutes(0);
 
     public DiaryService(DiaryRepository diaryRepository) {
         this.diaryRepository = diaryRepository;
     }
 
     public void createDiary(String title, String content) {
+        LocalDateTime now = LocalDateTime.now();
+        DiaryEntity lastestDiary = diaryRepository.findTopByOrderByCreatedAtDesc();
+
+        //lastestDiary가 null이면, 작성된 일기가 없는 것.
+        if(lastestDiary != null) {
+            //null이 아닌 경우, 경과 시간 계산
+            Duration elapsedTime = Duration.between(lastestDiary.getCreatedAt(), now);
+
+            // 쿨다운이 지났는지 확인
+            if (elapsedTime.compareTo(DIARY_WRITE_COOLDOWN) < 0) {
+                throw new IllegalStateException("5분에 하나씩 작성 가능");
+                //추후 남은 시간 계산
+            }
+        }
+
         //제목 중복 검사
         if (diaryRepository.existsByTitle(title)) {
             throw new IllegalArgumentException("이미 존재하는 제목입니다. 다른 제목을 입력하세요.");
