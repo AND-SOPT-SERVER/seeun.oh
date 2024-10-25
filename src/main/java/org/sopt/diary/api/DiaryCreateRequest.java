@@ -1,10 +1,13 @@
 package org.sopt.diary.api;
 
-public class DiaryRequest {
+
+
+public class DiaryCreateRequest {
     private String title;
+
     private String content;
 
-    public DiaryRequest(String title, String content) {
+    public DiaryCreateRequest(String title, String content) {
         this.title = title;
         this.content = content;
     }

@@ -18,13 +18,13 @@ public class DiaryController {
 
     //일기 작성
     @PostMapping("/api/diary")
-    ResponseEntity<Map<String, String>> post(@RequestBody DiaryRequest diaryRequest) {
+    ResponseEntity<Map<String, String>> post(@RequestBody DiaryCreateRequest diaryCreateRequest) {
         try {
             // content 글자 수 확인
-            if (diaryRequest.getContent().length() > 30) {
+            if (diaryCreateRequest.getContent().length() > 30) {
                 throw new IllegalArgumentException("내용은 30자 이내여야 합니다.");
             }
-            diaryService.createDiary(diaryRequest.getTitle(), diaryRequest.getContent());
+            diaryService.createDiary(diaryCreateRequest.getTitle(), diaryCreateRequest.getContent());
 
             // Map.of()를 통해 HashMap 명시적 생성없이 Map 즉시 반환
             return ResponseEntity.status(200).body(Map.of("message", "일기 작성을 성공했습니다."));
@@ -67,13 +67,13 @@ public class DiaryController {
 
     //일기 수정
     @PatchMapping("/api/diary/{diaryId}")
-    ResponseEntity<Map<String, String>> patch(@PathVariable long diaryId, @RequestBody DiaryRequest diaryRequest) {
+    ResponseEntity<Map<String, String>> patch(@PathVariable long diaryId, @RequestBody DiaryUpdateRequest diaryUpdateRequest) {
         try {
             // content 글자 수 확인
-            if (diaryRequest.getContent().length() > 30) {
+            if (diaryUpdateRequest.getContent().length() > 30) {
                 throw new IllegalArgumentException("내용은 30자 이내여야 합니다.");
             }
-            diaryService.updateDiary(diaryId, diaryRequest.getTitle(), diaryRequest.getContent());
+            diaryService.updateDiary(diaryId, diaryUpdateRequest.getContent());
 
             return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "일기 수정에 성공했습니다."));
 

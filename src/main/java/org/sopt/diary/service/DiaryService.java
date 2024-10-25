@@ -87,7 +87,7 @@ public class DiaryService {
         }
     }
 
-    public void updateDiary(long id, String title, String content) {
+    public void updateDiary(long id, String content) {
         // id에 해당하는 DiaryEntity가 존재하는지 확인
         DiaryEntity diaryEntity = diaryRepository.findById(id)
                 .orElseThrow(()-> new NoSuchElementException("존재하지 않는 일기 id입니다."));
