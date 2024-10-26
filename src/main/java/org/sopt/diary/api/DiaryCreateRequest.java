@@ -3,9 +3,9 @@ package org.sopt.diary.api;
 
 
 public class DiaryCreateRequest {
-    private String title;
+    private final String title;
 
-    private String content;
+    private final String content;
 
     public DiaryCreateRequest(String title, String content) {
         this.title = title;
