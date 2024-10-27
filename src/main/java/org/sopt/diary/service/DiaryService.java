@@ -20,7 +20,7 @@ import java.util.Optional;
 public class DiaryService {
 
     private final DiaryRepository diaryRepository;
-    private static final Duration DIARY_WRITE_COOLDOWN = Duration.ofMinutes(0);
+    private static final Duration DIARY_WRITE_COOLDOWN = Duration.ofMinutes(5);
 
     public DiaryService(DiaryRepository diaryRepository) {
         this.diaryRepository = diaryRepository;
