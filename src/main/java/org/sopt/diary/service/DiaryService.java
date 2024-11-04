@@ -1,12 +1,12 @@
 package org.sopt.diary.service;
 
 import jakarta.persistence.EntityNotFoundException;
-import org.sopt.diary.api.DiaryCreateRequest;
-import org.sopt.diary.api.DiaryDetailResponse;
-import org.sopt.diary.api.DiaryListResponse;
-import org.sopt.diary.api.DiaryUpdateRequest;
+import org.sopt.diary.api.dto.request.DiaryCreateRequest;
+import org.sopt.diary.api.dto.response.DiaryDetailResponse;
+import org.sopt.diary.api.dto.response.DiaryListResponse;
+import org.sopt.diary.api.dto.request.DiaryUpdateRequest;
 import org.springframework.transaction.annotation.Transactional;
-import org.sopt.diary.repository.DiaryEntity;
+import org.sopt.diary.domain.DiaryEntity;
 import org.sopt.diary.repository.DiaryRepository;
 import org.springframework.stereotype.Component;
 
@@ -14,8 +14,6 @@ import org.springframework.stereotype.Component;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Component
 public class DiaryService {

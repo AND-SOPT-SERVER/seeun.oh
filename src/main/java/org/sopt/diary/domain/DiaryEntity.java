@@ -1,4 +1,4 @@
-package org.sopt.diary.repository;
+package org.sopt.diary.domain;
 
 
 import jakarta.persistence.*;

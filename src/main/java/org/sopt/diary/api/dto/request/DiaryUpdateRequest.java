@@ -1,4 +1,4 @@
-package org.sopt.diary.api;
+package org.sopt.diary.api.dto.request;
 
 import jakarta.validation.constraints.Size;
 

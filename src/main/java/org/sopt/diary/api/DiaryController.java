@@ -1,6 +1,10 @@
 package org.sopt.diary.api;
 
 import jakarta.validation.Valid;
+import org.sopt.diary.api.dto.request.DiaryCreateRequest;
+import org.sopt.diary.api.dto.response.DiaryDetailResponse;
+import org.sopt.diary.api.dto.response.DiaryListResponse;
+import org.sopt.diary.api.dto.request.DiaryUpdateRequest;
 import org.sopt.diary.service.DiaryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
