@@ -1,12 +1,9 @@
 package org.sopt.diary.api;
 
-public class DiaryUpdateRequest {
+import jakarta.validation.constraints.Size;
 
-    private String content;
-
-
-    public String getContent() {
-        return content;
-    }
-
+public record DiaryUpdateRequest(
+        @Size(max=30, message="글자수는 30자 이하로 작성해야 합니다.")
+        String content
+) {
 }

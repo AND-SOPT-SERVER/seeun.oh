@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.sopt.diary.api.DiaryCreateRequest;
 import org.sopt.diary.api.DiaryDetailResponse;
 import org.sopt.diary.api.DiaryListResponse;
+import org.sopt.diary.api.DiaryUpdateRequest;
 import org.springframework.transaction.annotation.Transactional;
 import org.sopt.diary.repository.DiaryEntity;
 import org.sopt.diary.repository.DiaryRepository;
@@ -57,12 +58,11 @@ public class DiaryService {
         return DiaryDetailResponse.of(diaryEntity.getTitle(), diaryEntity.getContent(), diaryEntity.getId(), diaryEntity.getCreatedAt());
     }
 
-    public void updateDiary(long id, String content) {
+    @Transactional
+    public void updateDiary(final long id, final DiaryUpdateRequest diaryUpdateRequest) {
         // id에 해당하는 DiaryEntity가 존재하는지 확인
-        DiaryEntity diaryEntity = diaryRepository.findById(id)
-                .orElseThrow(()-> new NoSuchElementException("존재하지 않는 일기 id입니다."));
-        diaryEntity.setContent(content);
-        diaryRepository.save(diaryEntity);
+        DiaryEntity diaryEntity = findDiaryById(id);
+        diaryEntity.setContent(diaryUpdateRequest.content());
     }
 
     public void deleteDiary(final long id) {

@@ -42,19 +42,8 @@ public class DiaryController {
     //일기 수정
     @PatchMapping("/api/diary/{diaryId}")
     ResponseEntity<Map<String, String>> patch(@PathVariable long diaryId, @RequestBody DiaryUpdateRequest diaryUpdateRequest) {
-        try {
-            // content 글자 수 확인
-            if (diaryUpdateRequest.getContent().length() > 30) {
-                throw new IllegalArgumentException("내용은 30자 이내여야 합니다.");
-            }
-            diaryService.updateDiary(diaryId, diaryUpdateRequest.getContent());
-
-            return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "일기 수정에 성공했습니다."));
-
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
-        }
-
+        diaryService.updateDiary(diaryId, diaryUpdateRequest);
+        return ResponseEntity.ok().build();
     }
 
     //일기 삭제
