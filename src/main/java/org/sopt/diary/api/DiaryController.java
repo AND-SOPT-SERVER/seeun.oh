@@ -59,13 +59,10 @@ public class DiaryController {
 
     //일기 삭제
     @DeleteMapping("/api/diary/{diaryId}")
-    ResponseEntity<Map<String, String>> delete(@PathVariable long diaryId) {
-        try {
-            diaryService.deleteDiary(diaryId);
-            return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "일기 삭제에 성공했습니다."));
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
-        }
+    ResponseEntity<Void> delete(@PathVariable long diaryId) {
+        diaryService.deleteDiary(diaryId);
+        return ResponseEntity.ok().build();
+
 
 
     }

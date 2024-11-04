@@ -65,17 +65,9 @@ public class DiaryService {
         diaryRepository.save(diaryEntity);
     }
 
-    public void deleteDiary(long id) {
-        // id에 해당하는 DiaryEntity가 존재하는지 확인
-        Optional<DiaryEntity> diaryEntityOptional = diaryRepository.findById(id);
-
-        if (diaryEntityOptional.isPresent()) {
-            // 다이어리 존재하면 삭제
-            diaryRepository.deleteById(id);
-        } else {
-            // 존재하지 않을 경우 예외 처리
-            throw new NoSuchElementException("존재하지 않는 일기 id입니다.");
-        }
+    public void deleteDiary(final long id) {
+        DiaryEntity diaryEntity = findDiaryById(id);
+        diaryRepository.delete(diaryEntity);
     }
 
     private DiaryEntity findDiaryById(final long id) {
