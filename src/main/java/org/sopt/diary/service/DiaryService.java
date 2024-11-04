@@ -1,5 +1,7 @@
 package org.sopt.diary.service;
 
+import org.sopt.diary.api.DiaryCreateRequest;
+import org.springframework.transaction.annotation.Transactional;
 import org.sopt.diary.repository.DiaryEntity;
 import org.sopt.diary.repository.DiaryRepository;
 
@@ -25,8 +27,8 @@ public class DiaryService {
     public DiaryService(DiaryRepository diaryRepository) {
         this.diaryRepository = diaryRepository;
     }
-
-    public void createDiary(String title, String content) {
+    @Transactional
+    public void createDiary(final DiaryCreateRequest diaryCreateRequest) {
         LocalDateTime now = LocalDateTime.now();
         DiaryEntity lastestDiary = diaryRepository.findTopByOrderByCreatedAtDesc();
 
@@ -42,12 +44,7 @@ public class DiaryService {
             }
         }
 
-        //제목 중복 검사
-        if (diaryRepository.existsByTitle(title)) {
-            throw new IllegalArgumentException("이미 존재하는 제목입니다. 다른 제목을 입력하세요.");
-        }
-
-        diaryRepository.save(new DiaryEntity(title, content));
+        diaryRepository.save(new DiaryEntity(diaryCreateRequest.title(), diaryCreateRequest.content()));
     }
 
     public List<Diary> getList() {

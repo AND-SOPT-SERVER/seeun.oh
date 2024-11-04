@@ -1,5 +1,6 @@
 package org.sopt.diary.api;
 
+import jakarta.validation.Valid;
 import org.sopt.diary.service.Diary;
 import org.sopt.diary.service.DiaryService;
 import org.springframework.http.HttpStatus;
@@ -18,23 +19,12 @@ public class DiaryController {
 
     //일기 작성
     @PostMapping("/api/diary")
-    ResponseEntity<Map<String, String>> post(@RequestBody DiaryCreateRequest diaryCreateRequest) {
-        try {
-            // content 글자 수 확인
-            if (diaryCreateRequest.getContent().length() > 30) {
-                throw new IllegalArgumentException("내용은 30자 이내여야 합니다.");
-            }
-            diaryService.createDiary(diaryCreateRequest.getTitle(), diaryCreateRequest.getContent());
+    ResponseEntity<Void> post(@Valid @RequestBody DiaryCreateRequest diaryCreateRequest) {
 
-            // Map.of()를 통해 HashMap 명시적 생성없이 Map 즉시 반환
-            return ResponseEntity.status(200).body(Map.of("message", "일기 작성을 성공했습니다."));
+            diaryService.createDiary(diaryCreateRequest);
+            return ResponseEntity.status(HttpStatus.CREATED).build();
 
-        } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(Map.of("message", e.getMessage()));
-        }
-        catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
-        }
+
 
     }
 
