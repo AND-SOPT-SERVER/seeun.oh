@@ -2,20 +2,25 @@ package org.sopt.diary.api;
 
 import java.util.List;
 
-public class DiaryListResponse {
-    private List<DiaryResponse> diaryList;
-
-    public DiaryListResponse(List<DiaryResponse> diaryList) {
-        this.diaryList = diaryList;
+public record DiaryListResponse(
+    List<DiaryResponse> diaryList
+){
+    public record DiaryResponse(
+            long id,
+            String title
+    ) {
+        public static DiaryResponse of(long id, String title) {
+            return new DiaryResponse(id, title);
+        }
     }
 
-    public List<DiaryResponse> getDiaryList() {
-        return diaryList;
+    public static DiaryListResponse of(List<DiaryResponse> diaryList) {
+        return new DiaryListResponse(diaryList);
     }
-
-
-
-
-
-
 }
+
+
+
+
+
+

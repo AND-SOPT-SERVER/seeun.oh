@@ -24,24 +24,13 @@ public class DiaryController {
             diaryService.createDiary(diaryCreateRequest);
             return ResponseEntity.status(HttpStatus.CREATED).build();
 
-
-
     }
 
     //일기 목록 조회
     @GetMapping("/api/diary")
     ResponseEntity<DiaryListResponse> get() {
-
-        //service로 부터 가져온 diaryList
-        List<Diary> diaryList = diaryService.getList();
-
-        //client와 협의한 인터페이스로 변환
-        List<DiaryResponse> diaryResponseList = new ArrayList<>();
-        for(Diary diary : diaryList) {
-            diaryResponseList.add(new DiaryResponse(diary.getId(), diary.getTitle()));
-        }
-
-        return ResponseEntity.ok(new DiaryListResponse(diaryResponseList));
+        DiaryListResponse diaryListResponse = diaryService.getList();
+        return ResponseEntity.ok(diaryListResponse);
     }
 
     //일기 상세 조회

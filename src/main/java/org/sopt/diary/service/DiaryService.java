@@ -1,19 +1,15 @@
 package org.sopt.diary.service;
 
 import org.sopt.diary.api.DiaryCreateRequest;
+import org.sopt.diary.api.DiaryListResponse;
 import org.springframework.transaction.annotation.Transactional;
 import org.sopt.diary.repository.DiaryEntity;
 import org.sopt.diary.repository.DiaryRepository;
-
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
+
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -47,25 +43,10 @@ public class DiaryService {
         diaryRepository.save(new DiaryEntity(diaryCreateRequest.title(), diaryCreateRequest.content()));
     }
 
-    public List<Diary> getList() {
-
-        //repository로부터 DiaryEntity 가져옴
-        //final List<DiaryEntity> diaryEntityList = diaryRepository.findAll();
-
-        //목록 조회 10개 제한
-        Pageable pageable =PageRequest.of(0, 10, Sort.by("id").descending());
-
-        // Page 객체로 페이징된 결과를 가져옴
-        List<DiaryEntity> diaryEntityList = diaryRepository.findAll(pageable).getContent();
-
-
-        //DiaryEntity -> Diary로 변환해주는 작업
-        final List<Diary> diaryList = new ArrayList<>();
-
-        for (DiaryEntity diaryEntity : diaryEntityList) {
-            diaryList.add(new Diary(diaryEntity.getId(), diaryEntity.getTitle(), diaryEntity.getContent(), diaryEntity.getCreatedAt()));
-        }
-        return diaryList;
+    public DiaryListResponse getList() {
+        List<Diary> diaryList = diaryRepository.findTop10ByOrderByCreatedAtDesc();
+        List<DiaryListResponse.DiaryResponse> diaryResponse = diaryList.stream().map(diary -> DiaryListResponse.DiaryResponse.of(diary.getId(), diary.getTitle())).toList();
+        return DiaryListResponse.of(diaryResponse);
     }
 
     public Diary getDiaryById(long id) {
