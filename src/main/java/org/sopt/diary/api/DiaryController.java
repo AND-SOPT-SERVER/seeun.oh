@@ -1,7 +1,6 @@
 package org.sopt.diary.api;
 
 import jakarta.validation.Valid;
-import org.sopt.diary.service.Diary;
 import org.sopt.diary.service.DiaryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,11 +35,7 @@ public class DiaryController {
     //일기 상세 조회
     @GetMapping("/api/diary/{diaryId}")
     ResponseEntity<DiaryDetailResponse> getDetail(@PathVariable long diaryId) {
-        // service에서 다이어리 상세 정보를 가져옴
-        Diary diary = diaryService.getDiaryById(diaryId);
-
-        // Diary를 DiaryDetailResponse 변환
-        DiaryDetailResponse diaryDetailResponse = new DiaryDetailResponse(diary.getId(), diary.getTitle(), diary.getContent(), diary.getCreatedAt());
+        DiaryDetailResponse diaryDetailResponse = diaryService.getDiaryById(diaryId);
         return ResponseEntity.ok(diaryDetailResponse);
     }
 
