@@ -35,12 +35,13 @@ public class DiaryEntity {
     
 
     public DiaryEntity() {}
-    public DiaryEntity(UserEntity user, String title, String content, Category category) {
+    public DiaryEntity(UserEntity user, String title, String content, Category category, boolean isVisible) {
         this.user = user;
         this.title = title;
         this.content = content;
         this.category = category;
         this.createdAt = LocalDateTime.now();
+        this.isVisible = isVisible;
     }
 
     public long getId() {
@@ -68,5 +69,9 @@ public class DiaryEntity {
     public UserEntity getUser() {
         return user;
     }
+
+    public boolean getVisible() {return isVisible;}
+
+    public void setVisible(boolean visible) { this.isVisible = visible; }
 
 }

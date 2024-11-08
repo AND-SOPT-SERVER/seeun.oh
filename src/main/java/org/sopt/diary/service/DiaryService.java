@@ -31,9 +31,9 @@ public class DiaryService {
         this.userRepository = userRepository;
     }
     @Transactional
-    public void createDiary(final String title, final String content, final Category category, final String username, final String password) {
+    public void createDiary(final String title, final String content, final Category category, final String username, final String password, boolean isVisible) {
         UserEntity user = findUser(username, password);
-        DiaryEntity diary = new DiaryEntity(user, title, content, category);
+        DiaryEntity diary = new DiaryEntity(user, title, content, category, isVisible);
         diaryRepository.save(diary);
     }
 
@@ -51,15 +51,16 @@ public class DiaryService {
     public DiaryDetailResponse getDiaryById(final long id) {
         DiaryEntity diaryEntity = findDiaryById(id);
 
-        return DiaryDetailResponse.of(diaryEntity.getTitle(), diaryEntity.getContent(), diaryEntity.getId(), diaryEntity.getCategory(), diaryEntity.getCreatedAt());
+        return DiaryDetailResponse.of(diaryEntity.getTitle(), diaryEntity.getContent(), diaryEntity.getId(), diaryEntity.getCategory(), diaryEntity.getCreatedAt(), diaryEntity.getVisible());
     }
 
     @Transactional
-    public void updateDiary(final long id, final String content, final String username, final String password) {
+    public void updateDiary(final long id, final String content, final String username, final String password, boolean isVisible) {
         // user 확인
         UserEntity user = findUser(username, password);
         DiaryEntity diary = findDiaryWithUser(id, user);
         diary.setContent(content);
+        diary.setVisible(isVisible);
     }
 
 
@@ -93,9 +94,9 @@ public class DiaryService {
     private List<DiaryListResponse.DiaryResponse> getDiaryList(final Category category, final UserEntity user) {
         List<DiaryEntity> diaryList;
         if(category == null && user == null) { //둘 다 x
-            diaryList = diaryRepository.findAll();
+            diaryList = diaryRepository.findByIsVisibleTrue();
         } else if(user == null) { //전체의 category list
-            diaryList = diaryRepository.findByCategory(category);
+            diaryList = diaryRepository.findByCategoryAndIsVisibleTrue(category);
         } else if(category == null) { //user의 전체 list
             diaryList = diaryRepository.findByUser(user);
         } else { //user의 category list

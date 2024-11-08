@@ -25,7 +25,7 @@ public class DiaryController {
     @PostMapping("/api/diary")
     ResponseEntity<Void> post(@Valid @RequestBody DiaryCreateRequest diaryCreateRequest, @RequestHeader(value="username") String username, @RequestHeader(value="password") String password) {
             Category category = Category.findCategory(diaryCreateRequest.category());
-            diaryService.createDiary(diaryCreateRequest.title(), diaryCreateRequest.content(), category, username, password);
+            diaryService.createDiary(diaryCreateRequest.title(), diaryCreateRequest.content(), category, username, password, diaryCreateRequest.isVisible());
             return ResponseEntity.status(HttpStatus.CREATED).build();
 
     }
@@ -55,7 +55,7 @@ public class DiaryController {
     //일기 수정
     @PatchMapping("/api/diary/{diaryId}")
     ResponseEntity<Map<String, String>> patch(@PathVariable long diaryId, @RequestBody DiaryUpdateRequest diaryUpdateRequest, @RequestHeader(value="username") String username, @RequestHeader(value="password") String password) {
-        diaryService.updateDiary(diaryId, diaryUpdateRequest.content(), username, password);
+        diaryService.updateDiary(diaryId, diaryUpdateRequest.content(), username, password, diaryUpdateRequest.isVisible());
         return ResponseEntity.ok().build();
     }
 
