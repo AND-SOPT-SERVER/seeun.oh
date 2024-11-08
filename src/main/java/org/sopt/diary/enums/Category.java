@@ -1,10 +1,5 @@
 package org.sopt.diary.enums;
 
-import org.sopt.diary.exception.DiaryException;
-
-import java.util.Arrays;
-
-import static org.sopt.diary.code.FailureCode.NOT_EXISTS_CATEGORY;
 
 public enum Category {
     FOOD("음식"),
@@ -21,10 +16,16 @@ public enum Category {
     }
 
     public static Category findCategory(String name) {
-        if(name == null) return null;
-        return Arrays.stream(Category.values()).filter(category -> category.getName().equals(name))
-                .findAny()
-                .orElseThrow(() -> new DiaryException(NOT_EXISTS_CATEGORY));
+
+        if(name == null) {
+            return null;
+        }
+        for(Category category : Category.values()) {
+            if(category.getName().equals(name)) {
+                return category;
+            }
+        }
+        throw new IllegalArgumentException("유효하지 않은 카테고리입니다." + name);
     }
 
 
