@@ -15,9 +15,19 @@ public interface DiaryRepository extends JpaRepository<DiaryEntity, Long> {
     List<DiaryEntity> findTop10ByOrderByCreatedAtDesc();
 
     Optional<DiaryEntity> findByUserAndId(UserEntity user, Long id);
-    List<DiaryEntity> findByCategoryAndIsVisibleTrue(Category category);
-    List<DiaryEntity> findByCategoryAndUser(Category category, UserEntity user);
-    List<DiaryEntity> findByUser(UserEntity user);
 
-    List<DiaryEntity> findByIsVisibleTrue();
+    //최신순 정렬
+    //카테고리 선택o
+    List<DiaryEntity> findByCategoryAndIsVisibleTrueOrderByCreatedAtDesc(Category category);
+
+    //카테고리 선택x
+    List<DiaryEntity> findByIsVisibleTrueOrderByCreatedAtDesc();
+
+    //유저 o, 카테고리 선택o,
+    List<DiaryEntity> findByCategoryAndUserOrderByCreatedAtDesc(Category category, UserEntity user);
+
+    //유저 o, 카테고리 선택x
+    List<DiaryEntity> findByUserOrderByCreatedAtDesc(UserEntity user);
+
+
 }

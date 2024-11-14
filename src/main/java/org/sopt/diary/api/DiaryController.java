@@ -47,21 +47,21 @@ public class DiaryController {
 
     //일기 상세 조회
     @GetMapping("/api/diary/{diaryId}")
-    ResponseEntity<DiaryDetailResponse> getDetail(@PathVariable long diaryId) {
+    ResponseEntity<DiaryDetailResponse> getDetail(@PathVariable(name = "diaryId") long diaryId) {
         DiaryDetailResponse diaryDetailResponse = diaryService.getDiaryById(diaryId);
         return ResponseEntity.ok(diaryDetailResponse);
     }
 
     //일기 수정
     @PatchMapping("/api/diary/{diaryId}")
-    ResponseEntity<Map<String, String>> patch(@PathVariable long diaryId, @RequestBody DiaryUpdateRequest diaryUpdateRequest, @RequestHeader(value="username") String username, @RequestHeader(value="password") String password) {
+    ResponseEntity<Map<String, String>> patch(@PathVariable(name = "diaryId") long diaryId, @RequestBody DiaryUpdateRequest diaryUpdateRequest, @RequestHeader(value="username") String username, @RequestHeader(value="password") String password) {
         diaryService.updateDiary(diaryId, diaryUpdateRequest.content(), username, password, diaryUpdateRequest.isVisible());
         return ResponseEntity.ok().build();
     }
 
     //일기 삭제
     @DeleteMapping("/api/diary/{diaryId}")
-    ResponseEntity<Void> delete(@PathVariable long diaryId, @RequestHeader(value="username") String username, @RequestHeader(value="password") String password) {
+    ResponseEntity<Void> delete(@PathVariable(name = "diaryId") long diaryId, @RequestHeader(value="username") String username, @RequestHeader(value="password") String password) {
         diaryService.deleteDiary(diaryId, username, password);
         return ResponseEntity.ok().build();
 

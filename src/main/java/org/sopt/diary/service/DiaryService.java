@@ -1,9 +1,11 @@
 package org.sopt.diary.service;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.sopt.diary.api.dto.response.DiaryDetailResponse;
 import org.sopt.diary.api.dto.response.DiaryListResponse;
 import org.sopt.diary.api.dto.request.DiaryUpdateRequest;
+import org.sopt.diary.exception.NotFoundException;
+import org.sopt.diary.exception.IllegalArgumentException;
+import org.sopt.diary.exception.code.ErrorCode;
 import org.sopt.diary.repository.UserEntity;
 import org.sopt.diary.enums.Category;
 import org.sopt.diary.repository.UserRepository;
@@ -75,32 +77,32 @@ public class DiaryService {
 
     private DiaryEntity findDiaryById(final long id) {
         return diaryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 일기 id입니다."));
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_EXISTS_WITH_ID));
     }
 
 
     private UserEntity findUser(final String username, final String password) {
-        UserEntity user = userRepository.findByUsername(username).orElseThrow(()-> new IllegalArgumentException("존재하지 않는 username입니다."));
+        UserEntity user = userRepository.findByUsername(username).orElseThrow(()-> new IllegalArgumentException(ErrorCode.NOT_EXISTS_WITH_USERNAME));
         if (!password.equals(user.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new IllegalArgumentException(ErrorCode.WRONG_PASSWORD);
         }
         return user;
     }
 
     private DiaryEntity findDiaryWithUser(final long id, final UserEntity user) {
-        return diaryRepository.findByUserAndId(user, id).orElseThrow(()-> new EntityNotFoundException("username에게 일치하는 id의 일기가 존재하지 않습니다."));
+        return diaryRepository.findByUserAndId(user, id).orElseThrow(()-> new NotFoundException(ErrorCode.NOT_EXISTS_WITH_USERNAME_AND_ID));
     }
 
     private List<DiaryListResponse.DiaryResponse> getDiaryList(final Category category, final UserEntity user) {
         List<DiaryEntity> diaryList;
         if(category == null && user == null) { //둘 다 x
-            diaryList = diaryRepository.findByIsVisibleTrue();
+            diaryList = diaryRepository.findByIsVisibleTrueOrderByCreatedAtDesc();
         } else if(user == null) { //전체의 category list
-            diaryList = diaryRepository.findByCategoryAndIsVisibleTrue(category);
+            diaryList = diaryRepository.findByCategoryAndIsVisibleTrueOrderByCreatedAtDesc(category);
         } else if(category == null) { //user의 전체 list
-            diaryList = diaryRepository.findByUser(user);
+            diaryList = diaryRepository.findByUserOrderByCreatedAtDesc(user);
         } else { //user의 category list
-            diaryList = diaryRepository.findByCategoryAndUser(category, user);
+            diaryList = diaryRepository.findByCategoryAndUserOrderByCreatedAtDesc(category, user);
         }
         return diaryList.stream().map(diary -> DiaryListResponse.DiaryResponse.of(diary.getId(), diary.getUser().getId(), diary.getTitle(), diary.getUser().getNickname(), diary.getCreatedAt())).toList();
     }

@@ -1,6 +1,10 @@
 package org.sopt.diary.enums;
 
 
+import org.sopt.diary.exception.NotFoundException;
+import org.sopt.diary.exception.code.ErrorCode;
+import org.sopt.diary.exception.IllegalArgumentException;
+
 public enum Category {
     FOOD("음식"),
     SCHOOL("학교"),
@@ -25,7 +29,7 @@ public enum Category {
                 return category;
             }
         }
-        throw new IllegalArgumentException("유효하지 않은 카테고리입니다." + name);
+        throw new NotFoundException(ErrorCode.NOT_EXISTS_CATEGORY);
     }
 
 
